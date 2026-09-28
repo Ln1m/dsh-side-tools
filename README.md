@@ -5,8 +5,9 @@
 | 包 | 作用 |
 |---|---|
 | `dsh-tools` | 面板本体：左栏「工具」Tab 的卡片宿主 + 卡片范式。**虚拟显示器那类私人卡片不在开源版里** |
-| `dsh-lan-services` | 局域网服务管理器：探测 3090~3099 段的本机 HTTP 服务，一键启停。它同时是「加一张卡」的**范式样本** |
 | `dsh-wifi-access` | 自研「移动端访问」的服务端：`0.0.0.0:3081 → 127.0.0.1:3080` 反代 |
+
+> 「示例·局域网服务」「示例·小游戏」两张卡是给你照抄的**范例**：本机那份真实的局域网服务不在开源版里。
 
 ## 两种「移动端访问」——**只能装一个**
 
@@ -37,13 +38,12 @@
 - `ReverseLanDock`——自研「移动端访问」卡：轮询 `/wifi-access/api/status`、开关走 `POST .../start|stop`；
 - `GameDock`——**展开区挂内容的范式**：里面是个 2048，状态存在卡片自己身上，键盘监听在展开时挂上、收起时摘掉。
 
-照抄这两张的结构就能加自己的工具，不必动面板本身。`dsh-lan-services` 那张卡也是同一个形状，可以对着看。
+照抄这几张的结构就能加自己的工具，不必动面板本身。`示例·局域网服务` 那张就是「标题行 + 折叠区」的最短范例。
 
 ## 安装
 
 ```powershell
 dsh plugin --profile web add file:<本仓库>/dsh-tools
-dsh plugin --profile web add file:<本仓库>/dsh-lan-services
 dsh plugin --profile web add file:<本仓库>/dsh-wifi-access   # 自研移动端访问
 # 要公网访问就改成（并且不要上面这条）：
 #   dsh plugin --profile web add dsh-pocket

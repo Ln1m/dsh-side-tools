@@ -396,6 +396,33 @@ window.__ModuleLoader__.load({
       );
     }
 
+    /* ── 示例·局域网服务：这张就是「往工具里加一张卡」的范例 ─────────────
+       它和本机那份局域网服务卡同形（标题行 + 折叠区），只是数据是演示用的：
+       照抄它，把 fetch 换成你自己的接口、把列表换成你自己的数据就行。 */
+    const LAN_DEMO = [
+      { port: 3090, title: '示例站点 A', on: true },
+      { port: 3091, title: '示例站点 B', on: false },
+      { port: 3092, title: '示例站点 C', on: false },
+    ];
+    function ServerIcon() { return svgIcon('<rect x="3" y="4" width="18" height="7" rx="2"/><rect x="3" y="13" width="18" height="7" rx="2"/><path d="M7 7.5h.01M7 16.5h.01"/>'); }
+    function LanServicesExampleDock() {
+      const [open, setOpen] = React.useState(false);
+      const [list, setList] = React.useState(LAN_DEMO);
+      const shown = list.filter((it) => it.on).length;
+      const flip = (port) => setList((cur) => cur.map((it) => (it.port === port ? { ...it, on: !it.on } : it)));
+      return h(DockShell, {
+        icon: h(ServerIcon), title: '示例·局域网服务', open: open, onToggle: () => setOpen(!open),
+        dotCls: shown > 0 ? 'dxp-dot-ok' : 'dxp-dot',
+        actions: h('button', { type: 'button', className: 'dxp-btn', onClick: () => setList(LAN_DEMO) }, '重置'),
+        note: '范例：标题行（圆点 + 图标 + 标题 + 动作 + 折叠箭头）+ 折叠区里挂你自己的列表与按钮。这里的数据是演示用的，接口换成你自己的即可。',
+      },
+        h('div', { className: 'dxp-row2' }, h('span', { className: 'dxp-hint' }, '本机服务 ' + String(shown) + ' / ' + String(list.length) + ' 个在跑（演示）')),
+        ...list.map((it) => h('div', { key: it.port, className: 'dxp-row2' },
+          h('span', { className: 'dxp-hint', style: { flex: '1' } }, String(it.port) + ' · ' + it.title),
+          h('button', { type: 'button', className: 'dxp-btn ' + (it.on ? 'dxp-danger' : 'dxp-primary'), onClick: () => flip(it.port) }, it.on ? '停止' : '启动'),
+        )),
+      );
+    }
     // 小工具：拼 className（避免 undefined）
     function cls() {
       var out = [];
@@ -422,6 +449,14 @@ window.__ModuleLoader__.load({
         () => (h(PocketDock)),
       ));
       // vk 槽：左栏「功能」Tab（本机 vk 布局下走这条路）
+      slots.inject('sidebar.panellist', () => slots.register(
+        { name: 'sidebar.panellist', id: 'dsh-lan-demo', order: 145, label: '示例·局域网服务' },
+        (props) => h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(ServerIcon)),
+      ));
+      slots.inject('main', () => slots.register(
+        { name: 'main', key: 'dsh-lan-demo' },
+        () => h(LanServicesExampleDock),
+      ));
     }
 
       const panelIcon = (icon) => (props) => (h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(icon)));
