@@ -1,0 +1,56 @@
+# dsh-tools
+
+给 DSH Web 左栏「工具」Tab 用的面板，外加两种「移动端访问」。一个仓，三个包。
+
+| 包 | 作用 |
+|---|---|
+| `dsh-tools` | 面板本体：左栏「工具」Tab 的卡片宿主 + 卡片范式。**虚拟显示器那类私人卡片不在开源版里** |
+| `dsh-lan-services` | 局域网服务管理器：探测 3090~3099 段的本机 HTTP 服务，一键启停。它同时是「加一张卡」的**范式样本** |
+| `dsh-wifi-access` | 自研「移动端访问」的服务端：`0.0.0.0:3081 → 127.0.0.1:3080` 反代 |
+
+## 两种「移动端访问」——**只能装一个**
+
+两张卡名字一样、都占 3081 端口：**同时只装（也只开）一个**，两个一起开会互相抢端口。
+
+| | 自研（局域网） | 公网（第三方 `dsh-pocket`） |
+|---|---|---|
+| 依赖 | 无，本仓自带 | 要**另外装** [`dsh-pocket`](https://github.com/shaobeichen/dsh-pocket)（npm 包，GPL-2.0） |
+| 从哪能访问 | 只有同一局域网内的手机/平板 | 局域网 + 公网，人在外面也能连回电脑 |
+| 口令 | 无 | 有 |
+| 是否出网 | 不出公网 | 走 Cloudflare 隧道 |
+| 适合 | 在家/办公室同一个 WiFi 随手用 | 出门在外要连回电脑 |
+
+**取舍一句话**：要外网访问就装公网版（含公网，代价是多一个第三方依赖 + 要口令）；不需要外网就装自研版（零依赖、无口令、不出网，代价是只能在局域网里用）。
+
+两张卡都在 `dsh-tools` 面板里；卡内底部各写了一句同样的提醒。
+
+## 往「工具」里加一张卡（范式）
+
+一张卡就三块：
+
+1. **标题行** `.dxp-row1`：状态圆点 + 图标 + 标题 + 右侧动作按钮 + 折叠箭头；
+2. **折叠区** `.dxp-collapse`：`.dxp-open` 时展开（CSS grid 0fr→1fr 过渡）；
+3. **展开区里挂什么由你定**：状态行、表单、列表、canvas、小游戏都行。
+
+`lib/client.js` 里 `DockShell` 是这套骨架，两个现成样本：
+
+- `ReverseLanDock`——自研「移动端访问」卡：轮询 `/wifi-access/api/status`、开关走 `POST .../start|stop`；
+- `GameDock`——**展开区挂内容的范式**：里面是个 2048，状态存在卡片自己身上，键盘监听在展开时挂上、收起时摘掉。
+
+照抄这两张的结构就能加自己的工具，不必动面板本身。`dsh-lan-services` 那张卡也是同一个形状，可以对着看。
+
+## 安装
+
+```powershell
+dsh plugin --profile web add file:<本仓库>/dsh-tools
+dsh plugin --profile web add file:<本仓库>/dsh-lan-services
+dsh plugin --profile web add file:<本仓库>/dsh-wifi-access   # 自研移动端访问
+# 要公网访问就改成（并且不要上面这条）：
+#   dsh plugin --profile web add dsh-pocket
+```
+
+装完重启 DSH。左栏第一个 Tab 就是「工具」。
+
+## License
+
+MIT
