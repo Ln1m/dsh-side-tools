@@ -1,3 +1,4 @@
+// 【无 vk 版】只注册官方槽，不做任何运行时探测：没装 dsh-vk-suite 也能独立用。
 // dsh-tools —— Client 半端。
 // 入口：左栏「功能」Tab（sidebar.extensions slot，由 @anoslide/dsh-client-vscode-layout 声明）。
 // 卡片 UI 与「移动端访问」同款（圆点 + 标题 + 开关 + 刷新 + 折叠箭头），样式 token 全部走主题变量，深浅色自适应。
@@ -411,63 +412,34 @@ window.__ModuleLoader__.load({
       // 取不到再退回 vkRoots 服务；两者都拿不到才算“没有 vk”。
         // 官方槽延迟注册：vk-suite 在场时绝不注册（官方 sidebar 只读 metadata 画按钮，注册了返回 null 也挡不住）。
   // 等 250ms 让所有插件（含异步 apply 的 vk-layout）就位，再按那个全局把手判定。
-  const injectLater = (n, f) => {
-    setTimeout(() => {
-      try { if (globalThis.__VK_LAYOUT_CTX__ === undefined) slots.inject(n, f); } catch (e) { /* ignore */ }
-    }, 250);
-  };
-const vkPresent = () => {
-        try {
-            if (typeof globalThis !== 'undefined' && globalThis.__VK_LAYOUT_CTX__ !== undefined) return true;
-          const s = ctx.get('slots');
-          if (s && typeof s.getVersion === 'function') {
-            if (s.getVersion('vk.sidebar.sessions') > 0) return true;
-            if (s.getVersion('vk.sidebar.dirflow') > 0) return true;
-            if (s.getVersion('vk.session.header.left') > 0) return true;
-          }
-          return ctx.get('vkRoots') !== undefined;
-        } catch { return false; }
-      };
       // 官方槽：左栏图标 + 中央面板（同一个 id 配对）——没装 vk-suite 时的主路
-      injectLater('sidebar.panellist', () => slots.register(
-        { name: 'sidebar.panellist', id: 'dsh-pocket-dock', order: 140, label: '移动端访问' },
-        (props) => (vkPresent() ? null : h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(PhoneIcon))),
+      slots.inject('sidebar.panellist', () => slots.register(
+        { name: 'sidebar.panellist', id: 'dsh-pocket-dock', order: 140, label: '移动端访问（公网）' },
+        (props) => (h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(PhoneIcon))),
       ));
-      injectLater('main', () => slots.register(
+      slots.inject('main', () => slots.register(
         { name: 'main', key: 'dsh-pocket-dock' },
-        () => (vkPresent() ? null : h(PocketDock)),
+        () => (h(PocketDock)),
       ));
       // vk 槽：左栏「功能」Tab（本机 vk 布局下走这条路）
-      slots.inject('vk.sidebar.extensions', () => slots.register(
-        { name: 'vk.sidebar.extensions', id: 'dsh-pocket-dock', order: 140, label: '移动端访问' },
-        () => (vkPresent() ? h(PocketDock) : null),
-      ));
     }
 
-      slots.inject('vk.sidebar.extensions', () => slots.register(
-        { name: 'vk.sidebar.extensions', id: 'dsh-reverse-lan', order: 150, label: '移动端访问' },
-        () => (vkPresent() ? h(ReverseLanDock) : null),
-      ));
-      slots.inject('vk.sidebar.extensions', () => slots.register(
-        { name: 'vk.sidebar.extensions', id: 'dsh-game-demo', order: 900, label: '示例·小游戏' },
-        () => (vkPresent() ? h(GameDock) : null),
-      ));
-      const panelIcon = (icon) => (props) => (vkPresent() ? null : h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(icon)));
-      injectLater('sidebar.panellist', () => slots.register(
-        { name: 'sidebar.panellist', id: 'dsh-reverse-lan', order: 150, label: '移动端访问' },
+      const panelIcon = (icon) => (props) => (h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(icon)));
+      slots.inject('sidebar.panellist', () => slots.register(
+        { name: 'sidebar.panellist', id: 'dsh-reverse-lan', order: 150, label: '移动端访问（本地）' },
         panelIcon(PhoneIcon),
       ));
-      injectLater('main', () => slots.register(
+      slots.inject('main', () => slots.register(
         { name: 'main', key: 'dsh-reverse-lan' },
-        () => (vkPresent() ? null : h(ReverseLanDock)),
+        () => (h(ReverseLanDock)),
       ));
-      injectLater('sidebar.panellist', () => slots.register(
+      slots.inject('sidebar.panellist', () => slots.register(
         { name: 'sidebar.panellist', id: 'dsh-game-demo', order: 900, label: '示例·小游戏' },
         panelIcon(GameIcon),
       ));
-      injectLater('main', () => slots.register(
+      slots.inject('main', () => slots.register(
         { name: 'main', key: 'dsh-game-demo' },
-        () => (vkPresent() ? null : h(GameDock)),
+        () => (h(GameDock)),
       ));
     exports.apply = apply;
     exports.inject = inject;
