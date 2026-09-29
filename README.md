@@ -73,7 +73,7 @@ slots.inject('vk.sidebar.footer', () => (toolsPanePresent(ctx) ? undefined : slo
 
 ```powershell
 dsh plugin --profile web add file:<本仓库>/dsh-tools
-dsh plugin --profile web add file:<本仓库>/dsh-wifi-access   # 自研移动端访问
+dsh plugin --profile web add file:<dsh-tool-wifi-access 的克隆路径>   # 自研移动端访问
 # 要公网访问就改成（并且不要上面这条）：
 #   dsh plugin --profile web add dsh-pocket
 ```
