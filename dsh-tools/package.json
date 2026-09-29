@@ -39,8 +39,8 @@
     "type": "git",
     "url": "git+https://github.com/Ln1m/dsh-tools.git"
   },
-  "homepage": "https://github.com/Ln1m/dsh-tools#readme",
+  "homepage": "https://github.com/Ln1m/dsh-side-tools#readme",
   "bugs": {
-    "url": "https://github.com/Ln1m/dsh-tools/issues"
+    "url": "https://github.com/Ln1m/dsh-side-tools/issues"
   }
 }
