@@ -74,7 +74,7 @@ The LAN-services card uses the same structure (the "Example · LAN services" car
 
 ```powershell
 dsh plugin --profile web add file:<this repository>/dsh-tools
-dsh plugin --profile web add file:<this repository>/dsh-wifi-access   # self-made mobile access
+dsh plugin --profile web add file:<clone of dsh-tool-wifi-access>   # self-made mobile access
 # for public access, install this instead of the line above:
 #   dsh plugin --profile web add dsh-pocket
 ```
