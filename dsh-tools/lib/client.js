@@ -431,53 +431,48 @@ window.__ModuleLoader__.load({
     }
 
     const inject = ['slots'];
+    const TOOLS_SLOT = 'vk.sidebar.extensions';
+    const FOOTER_SLOT = 'vk.sidebar.footer';
+    /** 「工具」Tab 在不在场：问骨架的 vkPanes 服务（契约表里有这一栏，就说明这个 Tab 存在）。 */
+    function toolsPanePresent(ctx) {
+      try {
+        const svc = ctx.get('vkPanes');
+        if (svc === undefined || svc === null || typeof svc.list !== 'function') return false;
+        const list = svc.list('sidebar');
+        return Array.isArray(list) && list.some((pane) => pane !== null && pane !== undefined && pane.slot === TOOLS_SLOT);
+      } catch (e) {
+        return false;
+      }
+    }
+    /**
+     * 一张卡一个入口（给第三方复用的挂载路径）：
+     *   有「工具」Tab → 挂 vk.sidebar.extensions（列表槽，一个 Tab 并排多张卡）；
+     *   没有工具 Tab → 挂 vk.sidebar.footer（左栏底部常驻，与 vk 下的钱包同一个槽）。
+     * 两条都是 vk 槽：卡不走官方 sidebar.panellist / main 那条通道。
+     */
+    function mountCard(ctx, slots, card) {
+      slots.inject(TOOLS_SLOT, () => slots.register(
+        { name: TOOLS_SLOT, id: card.id, order: card.order, label: card.label },
+        () => h(card.component),
+      ));
+      slots.inject(FOOTER_SLOT, () => (toolsPanePresent(ctx) ? undefined : slots.register(
+        { name: FOOTER_SLOT, id: card.id, order: card.order, label: card.label },
+        () => h(card.component),
+      )));
+    }
     function apply(ctx) {
       insertStyles(CSS);
       const slots = ctx.get('slots');
       if (slots === undefined) return;
-      // vk-suite 在场判据：优先看 vk 私有槽是否被声明过（官方 slots.getVersion 公开 API），
-      // 取不到再退回 vkRoots 服务；两者都拿不到才算“没有 vk”。
-        // 官方槽延迟注册：vk-suite 在场时绝不注册（官方 sidebar 只读 metadata 画按钮，注册了返回 null 也挡不住）。
-  // 等 250ms 让所有插件（含异步 apply 的 vk-layout）就位，再按那个全局把手判定。
-      // 官方槽：左栏图标 + 中央面板（同一个 id 配对）——没装 vk-suite 时的主路
-      slots.inject('sidebar.panellist', () => slots.register(
-        { name: 'sidebar.panellist', id: 'dsh-pocket-dock', order: 140, label: '移动端访问（公网）' },
-        (props) => (h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(PhoneIcon))),
-      ));
-      slots.inject('main', () => slots.register(
-        { name: 'main', key: 'dsh-pocket-dock' },
-        () => (h(PocketDock)),
-      ));
-      // vk 槽：左栏「功能」Tab（本机 vk 布局下走这条路）
-      slots.inject('sidebar.panellist', () => slots.register(
-        { name: 'sidebar.panellist', id: 'dsh-lan-demo', order: 145, label: '示例·局域网服务' },
-        (props) => h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(ServerIcon)),
-      ));
-      slots.inject('main', () => slots.register(
-        { name: 'main', key: 'dsh-lan-demo' },
-        () => h(LanServicesExampleDock),
-      ));
+      mountCard(ctx, slots, { id: 'dsh-tools/pocket-dock', order: 140, label: '移动端访问（公网）', component: PocketDock });
+      mountCard(ctx, slots, { id: 'dsh-tools/lan-demo', order: 145, label: '示例·局域网服务', component: LanServicesExampleDock });
+      mountCard(ctx, slots, { id: 'dsh-tools/reverse-lan', order: 150, label: '移动端访问（本地）', component: ReverseLanDock });
+      mountCard(ctx, slots, { id: 'dsh-tools/game-demo', order: 900, label: '示例·小游戏', component: GameDock });
     }
 
-      const panelIcon = (icon) => (props) => (h('span', { style: { display: 'inline-flex', alignItems: 'center', justifyContent: 'center', width: (props && props.size) || 22, height: (props && props.size) || 22 } }, h(icon)));
-      slots.inject('sidebar.panellist', () => slots.register(
-        { name: 'sidebar.panellist', id: 'dsh-reverse-lan', order: 150, label: '移动端访问（本地）' },
-        panelIcon(PhoneIcon),
-      ));
-      slots.inject('main', () => slots.register(
-        { name: 'main', key: 'dsh-reverse-lan' },
-        () => (h(ReverseLanDock)),
-      ));
-      slots.inject('sidebar.panellist', () => slots.register(
-        { name: 'sidebar.panellist', id: 'dsh-game-demo', order: 900, label: '示例·小游戏' },
-        panelIcon(GameIcon),
-      ));
-      slots.inject('main', () => slots.register(
-        { name: 'main', key: 'dsh-game-demo' },
-        () => (h(GameDock)),
-      ));
     exports.apply = apply;
     exports.inject = inject;
+    exports.mountCard = mountCard;
     return module.exports;
   }
 });
