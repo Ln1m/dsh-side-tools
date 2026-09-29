@@ -1,5 +1,8 @@
 # dsh-tools
 
+> Only the **vk build** ships in this repo: the sidebar "Extensions" tab is a position provided by the [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite) skeleton (contract + layout), which must be installed first.
+> **The vk build is the recommended one** in the two-build model: the sidebar tab switcher plus the right-column and settings positions live in the skeleton, so only the vk build lands in them.
+
 The panel behind the left sidebar's **Tools** tab in the DSH Web client, plus two flavours of "mobile access". One repository, three packages.
 
 | Package | What it is |
