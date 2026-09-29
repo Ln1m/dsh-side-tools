@@ -1,6 +1,7 @@
 # dsh-tools
 
-> Two builds, two positions, both on vk slots — **never through the official `sidebar.panellist` / `main` channel**. With the [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite) skeleton installed and a **Tools** tab in the sidebar, cards land in that tab (`vk.sidebar.extensions`, a list slot holding several cards side by side); **without a Tools tab** they fall back to a **pinned card at the bottom of the sidebar** (`vk.sidebar.footer` — the very slot the wallet uses under vk). **Use the vk build.**
+> **The vk build only**: position — the sidebar Tools tab (`vk.sidebar.extensions`, a list slot), falling back to the sidebar bottom (`vk.sidebar.footer`); **the panel and the card pattern live here**, the real LAN-services card is [dsh-card-lan-services](https://github.com/Ln1m/dsh-card-lan-services); install the [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite) contract + skeleton first.
+> Conflicts: a slot renders only its highest-priority entry, and two registrations at the same priority throw; mutually exclusive with anything claiming the same position (see "How to use it / what it conflicts with" in [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite)).
 
 The panel behind the left sidebar's **Tools** tab in the DSH Web client, plus two flavours of "mobile access". One repository, two packages.
 

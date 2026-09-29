@@ -1,6 +1,7 @@
 # dsh-tools
 
-> 两个版本、两个位置，都走 vk 槽 —— **不走官方 `sidebar.panellist` / `main` 那条通道**：装了 [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite) 骨架、左栏有**「工具」Tab** 时，卡挂进 Tab（`vk.sidebar.extensions`，列表槽，一个 Tab 并排多张卡）；**没有「工具」Tab** 时，卡落到**左栏底部常驻**（`vk.sidebar.footer` —— 和 vk 下的钱包同一个槽）。**推荐 vk 版**。
+> 本仓**只有 vk 版**：位置 —— 左栏「工具」Tab（`vk.sidebar.extensions` 列表槽），没有该 Tab 时落左栏底部（`vk.sidebar.footer`）；**面板与挂卡范式在本仓**，真实局域网服务卡在 [dsh-card-lan-services](https://github.com/Ln1m/dsh-card-lan-services)，需先装 [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite) 契约 + 骨架。
+> 冲突：一个槽位只渲染优先级最高的一条，同优先级重复注册会直接抛错；与占同一位置的插件互斥（详见 [dsh-vk-suite](https://github.com/Ln1m/dsh-vk-suite) 的「推荐怎么用 / 会跟谁冲突」）。
 
 给 DSH Web 左栏「工具」Tab 用的面板，外加两种「移动端访问」。一个仓，两个包。
 
