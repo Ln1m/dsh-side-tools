@@ -38,9 +38,14 @@ slots.inject('vk.sidebar.footer', () => (toolsPanePresent(ctx) ? undefined : slo
 
 `order` 决定同一区里的先后，`label` 是卡片标题；`id` 只要求在本仓卡里唯一（面板的卡一律用 `dsh-tools/…` 前缀，免得和别人的卡撞 id）。
 
-## 两种「移动端访问」——**只能装一个**
+## 移动端访问：**只装一个**，优先带口令的那个
 
-两张卡名字一样、都占 3081 端口：**同时只装（也只开）一个**，两个一起开会互相抢端口。
+| 选哪个 | 装什么 | 得到 | 代价 |
+|---|---|---|---|
+| **优先** | 第三方 [`dsh-pocket`](https://github.com/shaobeichen/dsh-pocket)（npm，GPL-2.0） | 公网可达 + 口令保护 | 要同时装一个别人的插件 |
+| 备选 | 自研 [`dsh-tool-wifi-access`](https://github.com/Ln1m/dsh-tool-wifi-access) | 局域网可达、零第三方依赖 | 无口令、不出网、只能同 WiFi 用 |
+
+**两个不要同时装**：都占 3081 端口，会互相抢。装了 `dsh-pocket` 就不要再装自研那份；不装第三方，就只装自研那份。
 
 | | 自研（局域网） | 公网（第三方 `dsh-pocket`） |
 |---|---|---|
@@ -50,7 +55,7 @@ slots.inject('vk.sidebar.footer', () => (toolsPanePresent(ctx) ? undefined : slo
 | 是否出网 | 不出公网 | 走 Cloudflare 隧道 |
 | 适合 | 在家/办公室同一个 WiFi 随手用 | 出门在外要连回电脑 |
 
-**取舍一句话**：要外网访问就装公网版（含公网，代价是多一个第三方依赖 + 要口令）；不需要外网就装自研版（零依赖、无口令、不出网，代价是只能在局域网里用）。
+下面是两边的细节对比（只在你要二选一时用得上）。
 
 `dsh-pocket` 装进来时自带它的卡，这时**不要**再让本仓面板挂公网那张（面板里的 `dsh-tools/pocket-dock` 是给没装 `dsh-pocket` 却想看那张卡的位置的）。
 

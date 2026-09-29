@@ -39,9 +39,14 @@ slots.inject('vk.sidebar.footer', () => (toolsPanePresent(ctx) ? undefined : slo
 
 `order` decides the position inside one area, `label` is the card title, and `id` only has to be unique among this repository's cards (the panel's own cards are prefixed `dsh-tools/…` so they never collide with anyone else's).
 
-## Two flavours of "mobile access" — **install only one**
+## Mobile access: **install exactly one**, the password-protected one first
 
-Both cards carry the same name and both want port 3081: **install (and run) exactly one**; running both makes them fight over the port.
+| Prefer | Install | You get | Cost |
+|---|---|---|---|
+| **First choice** | third-party [`dsh-pocket`](https://github.com/shaobeichen/dsh-pocket) (npm, GPL-2.0) | public reachability + a password | you install someone else's plugin too |
+| Fallback | our own [`dsh-tool-wifi-access`](https://github.com/Ln1m/dsh-tool-wifi-access) | LAN reachability, zero third-party dependencies | no password, never leaves your LAN, same Wi-Fi only |
+
+**Never install both**: they both want port 3081 and will fight over it. With `dsh-pocket` installed, do not install ours; without it, install ours only.
 
 | | Self-made (LAN) | Public (third-party `dsh-pocket`) |
 |---|---|---|
@@ -51,7 +56,7 @@ Both cards carry the same name and both want port 3081: **install (and run) exac
 | Goes off-LAN | no | yes, through a Cloudflare tunnel |
 | Best for | quick use at home/office on the same Wi-Fi | reaching your machine while travelling |
 
-**The trade-off in one line**: if you need access from outside, install the public flavour (it adds public reachability at the cost of one third-party dependency and a password); if you don't, install the self-made one (no dependencies, no password, never leaves your LAN, but LAN-only).
+The table below has the details for when you are choosing between the two.
 
 Installing `dsh-pocket` brings its own card; do **not** mount this panel's public card as well (the panel's `dsh-tools/pocket-dock` exists only so the card has a home when `dsh-pocket` is not installed).
 
